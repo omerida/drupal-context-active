@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * Implements hook_block_info().
+ *
+ * This hook declares what blocks are provided by the module.
+ */
+function context_active_block_info() {
+
+  $blocks['context_active'] = array(
+    'info' => t('Active Contexts'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * This hook generates the contents of the blocks themselves.
+ */
+function context_active_block_view($delta = '') {
+  // The $delta parameter tells us which block is being requested.
+  switch ($delta) {
+    case 'context_active':
+
+        $block['subject'] = t('Active Contexts');
+
+        if ($active_contexts = context_active_contexts()) {
+            $items = array_map('context_active_get_link', $active_contexts);
+            $block['content'] = '<p>' . t("The following contexts are active:") . '</p>'
+                              . theme('item_list', array('items' => $items));
+        } else {
+            $block['content'] = 'No active contexts found';
+        }
+
+        return $block;
+  }
+}
+
+function context_active_get_link($context) {
+    $item = array(
+        'data' => l($context->name, 'admin/structure/context/list/' . $context->name .'/edit'),
+    );
+
+    if ($context->description) {
+        $item['data'] .= ' - ' . $context->description;
+    }
+
+    return $item;
+}

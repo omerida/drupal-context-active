@@ -1,0 +1,7 @@
+name = Context Active
+description = Provides a block showing currently applied contexts on a page
+package = "Context"
+core = "7.x"
+
+files[] = context_active.module
+dependencies[] = context
